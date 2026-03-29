@@ -22,7 +22,8 @@ export default function Register() {
       await register(form.name, form.email, form.phone, form.password);
       navigate('/', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed. Please try again.');
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || 'Registration failed. Please try again.';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }

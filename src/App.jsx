@@ -23,6 +23,7 @@ import AdminCategories from './pages/admin/AdminCategories';
 import AdminOrders    from './pages/admin/AdminOrders';
 import AdminBanners   from './pages/admin/AdminBanners';
 import AdminStory     from './pages/admin/AdminStory';
+import AdminSettings  from './pages/admin/AdminSettings';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -63,6 +64,7 @@ export default function App() {
           <Route path="orders"     element={<AdminOrders />} />
           <Route path="banners"    element={<AdminBanners />} />
           <Route path="story"      element={<AdminStory />} />
+          <Route path="settings"   element={<AdminSettings />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

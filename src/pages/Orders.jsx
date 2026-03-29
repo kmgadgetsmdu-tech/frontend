@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { fmt, statusBadge } from '../utils/helpers';
 import { useAuth } from '../context/AuthContext';
+import ReviewForm from '../components/ReviewForm';
 
 export default function Orders() {
   const { user }    = useAuth();
@@ -10,6 +11,8 @@ export default function Orders() {
   const [filter,    setFilter]    = useState('');
   const [selected,  setSelected]  = useState(null);
   const [invoice,   setInvoice]   = useState(null);
+  const [showReview, setShowReview] = useState(false);
+  const [hasReview,  setHasReview]  = useState(false);
 
   useEffect(() => {
     const params = filter ? `?status=${filter}` : '';
@@ -17,10 +20,16 @@ export default function Orders() {
   }, [filter]);
 
   async function openOrder(order) {
+    console.log('Opening order:', { id: order.Id, status: order.Status, userId: order.UserId });
     setSelected(order);
     setInvoice(null);
+    setShowReview(false);
+    setHasReview(false);
     if (order.Status === 'shipped' || order.Status === 'delivered') {
       api.get(`/orders/${order.Id}/invoice`).then(r => setInvoice(r.data)).catch(() => {});
+    }
+    if (order.Status === 'delivered') {
+      api.get(`/reviews/order/${order.Id}`).then(r => setHasReview(r.data.hasReview)).catch(() => {});
     }
   }
 
@@ -162,6 +171,37 @@ export default function Orders() {
                       ⬇ Download
                     </a>
                   </div>
+                </div>
+              )}
+
+              {/* Review Section */}
+              {selected.Status === 'delivered' && (
+                <div style={{ marginTop:'20px', padding:'16px', background:'rgba(124,58,237,0.08)', border:'1px solid rgba(124,58,237,0.2)', borderRadius:'10px' }}>
+                  {showReview ? (
+                    <ReviewForm
+                      orderId={selected.Id}
+                      onClose={() => setShowReview(false)}
+                      onSuccess={() => {
+                        setHasReview(true);
+                        setShowReview(false);
+                      }}
+                    />
+                  ) : hasReview ? (
+                    <div style={{ textAlign:'center', padding:'12px' }}>
+                      <div style={{ fontSize:'1.8rem', marginBottom:'8px' }}>✅</div>
+                      <p style={{ color:'var(--success)', fontWeight:600, marginBottom:'4px' }}>Thank you for your review!</p>
+                      <p style={{ fontSize:'0.85rem', color:'var(--text-muted)' }}>Your feedback helps us improve the service</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p style={{ marginBottom:'12px', color:'var(--text-muted)' }}>⭐ How was your experience with this order?</p>
+                      <button
+                        onClick={() => setShowReview(true)}
+                        style={{ padding:'10px 20px', borderRadius:'8px', background:'rgba(124,58,237,0.2)', border:'1px solid rgba(124,58,237,0.4)', color:'var(--accent)', fontSize:'0.9rem', fontWeight:600, cursor:'pointer', width:'100%' }}>
+                        Share Your Feedback
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

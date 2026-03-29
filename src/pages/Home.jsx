@@ -2,12 +2,14 @@
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import ProductCard from '../components/ProductCard';
+import TestimonialCarousel from '../components/TestimonialCarousel';
 
 export default function Home() {
   const [banners,    setBanners]    = useState([]);
   const [categories, setCategories] = useState([]);
   const [featured,   setFeatured]   = useState([]);
   const [hotDeals,   setHotDeals]   = useState([]);
+  const [reviews,    setReviews]    = useState([]);
   const [story,      setStory]      = useState(null);
   const [bannerIdx,  setBannerIdx]  = useState(0);
   const timerRef = useRef(null);
@@ -17,6 +19,7 @@ export default function Home() {
     api.get('/categories').then(r   => setCategories(r.data)).catch(() => {});
     api.get('/products?sort=rating&limit=4').then(r => setFeatured(r.data)).catch(() => {});
     api.get('/products?hot=true&limit=6').then(r => setHotDeals(r.data)).catch(() => {});
+    api.get('/reviews').then(r      => setReviews(r.data)).catch(() => {});
     api.get('/story').then(r        => setStory(r.data)).catch(() => {});
   }, []);
 
@@ -160,34 +163,38 @@ export default function Home() {
       )}
 
       {/* ── Testimonials ── */}
-      <section className="section">
-        <div className="container">
-          <div className="section-header">
-            <h2>What Our Customers Say</h2>
-            <p>Real reviews from real buyers across Madurai</p>
-            <div className="section-divider" />
-          </div>
-          <div className="testimonials-grid">
-            {[
-              { name:'Rajesh K.', text:'Bought a smartwatch for my son. Excellent quality, works perfectly. Price was much cheaper than other shops. Highly recommended!' },
-              { name:'Priya S.',  text:'The earbuds sound amazing. Delivery was super fast. Customer support helped me pick the right model for my budget.' },
-              { name:'Arun P.',   text:'Ordered the BoomBox speaker. Rich bass, excellent build. Genuine product. Will definitely buy again from KM Gadgets!' },
-            ].map((t, i) => (
-              <div key={i} className="testimonial-card">
-                <div className="t-quote">"</div>
-                <p className="t-text">{t.text}</p>
-                <div className="t-author">
-                  <div className="t-avatar" style={{ background:'linear-gradient(135deg,var(--accent),var(--accent2))' }}>{t.name[0]}</div>
-                  <div>
-                    <div className="t-name">{t.name}</div>
-                    <div className="t-stars">★★★★★</div>
+      {reviews.length > 0 ? (
+        <TestimonialCarousel reviews={reviews} />
+      ) : (
+        <section className="section">
+          <div className="container">
+            <div className="section-header">
+              <h2>What Our Customers Say</h2>
+              <p>Real reviews from real buyers across Madurai</p>
+              <div className="section-divider" />
+            </div>
+            <div className="testimonials-grid">
+              {[
+                { name:'Rajesh K.', text:'Bought a smartwatch for my son. Excellent quality, works perfectly. Price was much cheaper than other shops. Highly recommended!' },
+                { name:'Priya S.',  text:'The earbuds sound amazing. Delivery was super fast. Customer support helped me pick the right model for my budget.' },
+                { name:'Arun P.',   text:'Ordered the BoomBox speaker. Rich bass, excellent build. Genuine product. Will definitely buy again from KM Gadgets!' },
+              ].map((t, i) => (
+                <div key={i} className="testimonial-card">
+                  <div className="t-quote">"</div>
+                  <p className="t-text">{t.text}</p>
+                  <div className="t-author">
+                    <div className="t-avatar" style={{ background:'linear-gradient(135deg,var(--accent),var(--accent2))' }}>{t.name[0]}</div>
+                    <div>
+                      <div className="t-name">{t.name}</div>
+                      <div className="t-stars">★★★★★</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </main>
   );
 }

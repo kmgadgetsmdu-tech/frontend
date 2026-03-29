@@ -11,6 +11,7 @@ const NAV = [
   { to:'/admin/orders',     icon:'🧾', label:'Orders'    },
   { to:'/admin/banners',    icon:'🖼️', label:'Banners'   },
   { to:'/admin/story',      icon:'📖', label:'Why Story' },
+  { to:'/admin/settings',   icon:'⚙️', label:'Settings'  },
 ];
 
 export default function AdminLayout() {

@@ -3,6 +3,7 @@ import { useAuth }  from '../context/AuthContext';
 import { useCart }  from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 import { useState, useEffect } from 'react';
+import api from '../api/axios';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -12,12 +13,30 @@ export default function Navbar() {
   const [scrolled,  setScrolled]  = useState(false);
   const [menuOpen,  setMenuOpen]  = useState(false);
   const [searchVal, setSearchVal] = useState('');
+  const [settings, setSettings]   = useState({
+    CompanyName: 'KM Gadgets',
+    CompanySubtitle: 'Kalyani Marketing & Gadgets',
+    LogoData: null
+  });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  async function fetchSettings() {
+    try {
+      const res = await api.get('/settings');
+      setSettings(res.data);
+    } catch (err) {
+      console.error('Error fetching settings:', err);
+    }
+  }
 
   function doSearch(e) {
     e.preventDefault();
@@ -33,10 +52,14 @@ export default function Navbar() {
     <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
       <div className="nav-inner">
         <Link to="/" className="nav-logo">
-          <div className="logo-icon">KMG</div>
+          {settings.LogoData ? (
+            <img src={settings.LogoData} alt="Logo" style={{ height: '50px', width: 'auto' }} />
+          ) : (
+            <div className="logo-icon">KMG</div>
+          )}
           <div className="logo-text">
-            <div className="name">KM Gadgets</div>
-            <div className="tagline">Kalyani Marketing &amp; Gadgets</div>
+            <div className="name">{settings.CompanyName}</div>
+            <div className="tagline">{settings.CompanySubtitle}</div>
           </div>
         </Link>
 
