@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import ProductCard from '../components/ProductCard';
 import TestimonialCarousel from '../components/TestimonialCarousel';
+import WhyStory from '../components/WhyStory';
 
 export default function Home() {
   const [banners,    setBanners]    = useState([]);
@@ -43,19 +44,19 @@ export default function Home() {
       <section className="hero-section">
         <div className="banner-slider" style={{ minHeight: banners.length ? '520px' : '0' }}>
           {banners.map((b, i) => (
-            <div key={b.Id} className={`banner-slide${i === bannerIdx ? ' active' : ''}`}
-              style={{ background: b.Gradient }}>
+            <div key={b.id} className={`banner-slide${i === bannerIdx ? ' active' : ''}`}
+              style={{ background: b.gradient }}>
               <div className="banner-content">
                 <div className="banner-text">
-                  <div className="banner-offer">{b.Offer}</div>
-                  <h1>{b.Title} <span></span></h1>
-                  <p>{b.Subtitle}</p>
+                  <div className="banner-offer">{b.offer}</div>
+                  <h1>{b.title} <span></span></h1>
+                  <p>{b.subtitle}</p>
                   <div className="banner-btns">
-                    <Link to={b.Link || '/shop'} className="btn-primary">{b.Cta}</Link>
+                    <Link to={b.link || '/shop'} className="btn-primary">{b.cta}</Link>
                     <Link to="/shop" className="btn-outline">Explore All →</Link>
                   </div>
                 </div>
-                <div className="banner-icon-wrap">{b.Icon}</div>
+                <div className="banner-icon-wrap">{b.icon}</div>
               </div>
             </div>
           ))}
@@ -110,9 +111,9 @@ export default function Home() {
             </div>
             <div className="categories-grid">
               {categories.map(c => (
-                <Link to={`/shop?category=${c.Slug}`} key={c.Id} className="cat-card">
-                  <div className="cat-icon">{c.Icon}</div>
-                  <div className="cat-name">{c.Name}</div>
+                <Link to={`/shop?category=${c.slug}`} key={c.id} className="cat-card">
+                  <div className="cat-icon">{c.icon}</div>
+                  <div className="cat-name">{c.name}</div>
                 </Link>
               ))}
             </div>
@@ -132,7 +133,7 @@ export default function Home() {
               <Link to="/shop" className="btn-outline" style={{ whiteSpace:'nowrap', padding:'10px 24px', fontSize:'0.9rem' }}>View All →</Link>
             </div>
             <div className="products-grid">
-              {featured.map(p => <ProductCard key={p.Id} product={p} />)}
+              {featured.map(p => <ProductCard key={p.id} product={p} />)}
             </div>
           </div>
         </section>
@@ -153,7 +154,7 @@ export default function Home() {
               <div className="section-divider" />
             </div>
             <div className="products-grid">
-              {hotDeals.map(p => <ProductCard key={p.Id} product={p} />)}
+              {hotDeals.map(p => <ProductCard key={p.id} product={p} />)}
             </div>
             <div style={{ textAlign:'center', marginTop:'32px' }}>
               <Link to="/shop" className="btn-outline">View All Products</Link>
@@ -163,7 +164,7 @@ export default function Home() {
       )}
 
       {/* ── Testimonials ── */}
-      {reviews.length > 0 ? (
+      {reviews && reviews.length > 0 ? (
         <TestimonialCarousel reviews={reviews} />
       ) : (
         <section className="section">
@@ -196,66 +197,5 @@ export default function Home() {
         </section>
       )}
     </main>
-  );
-}
-
-function WhyStory({ chapters }) {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const outer = document.getElementById('why-story-outer');
-    if (!outer) return;
-    function onScroll() {
-      const rect    = outer.getBoundingClientRect();
-      const total   = outer.offsetHeight - window.innerHeight;
-      const scrolled = -rect.top;
-      if (scrolled < 0 || scrolled > total) return;
-      const idx = Math.min(Math.floor((scrolled / total) * chapters.length), chapters.length - 1);
-      setActive(idx);
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [chapters.length]);
-
-  const ch = chapters[active];
-
-  return (
-    <section id="why-story-outer" className="why-story-outer">
-      <div id="why-story-sticky" className="why-story-sticky">
-        <div className="why-eyebrow">Why Choose KM Gadgets</div>
-        <div className="why-bg-orb why-orb-1" style={{ background:`radial-gradient(circle,${ch.orb1} 0%,transparent 65%)` }} />
-        <div className="why-bg-orb why-orb-2" style={{ background:`radial-gradient(circle,${ch.orb2} 0%,transparent 65%)` }} />
-        <div className="why-mega-wrap">
-          <span className="why-mega-icon">{ch.icon}</span>
-        </div>
-        <div className="why-chapter-num">
-          <span>{String(active + 1).padStart(2, '0')}</span>
-          <span className="why-chap-sep"> / </span>
-          <span>{String(chapters.length).padStart(2, '0')}</span>
-        </div>
-        <div className="why-story-text">
-          <h2 className="why-story-headline">{ch.headline}</h2>
-          <p className="why-story-para">{ch.para}</p>
-        </div>
-        <div className="why-scroll-hint" id="why-scroll-hint">
-          <span>Scroll to explore</span>
-          <div className="wsh-arrow" />
-        </div>
-        <div className="why-progress-row">
-          <div className="why-dots">
-            {chapters.map((_, i) => (
-              <button key={i} className={`wsd${i === active ? ' active' : ''}`} onClick={() => {
-                const outer = document.getElementById('why-story-outer');
-                const total = outer.offsetHeight - window.innerHeight;
-                window.scrollTo({ top: outer.offsetTop + (i / chapters.length) * total + 1, behavior:'smooth' });
-              }} />
-            ))}
-          </div>
-          <div className="why-progress-bar">
-            <div className="why-pbar-fill" style={{ width:`${((active + 1) / chapters.length) * 100}%` }} />
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }

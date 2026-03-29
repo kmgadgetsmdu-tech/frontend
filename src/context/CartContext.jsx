@@ -18,9 +18,9 @@ export function CartProvider({ children }) {
 
   function addToCart(product, qty = 1) {
     setCart(prev => {
-      const ex = prev.find(i => i.productId === product.Id);
-      if (ex) return prev.map(i => i.productId === product.Id ? { ...i, quantity: i.quantity + qty } : i);
-      return [...prev, { productId: product.Id, name: product.Name, price: product.Price, quantity: qty, image: product.images?.[0] || '' }];
+      const ex = prev.find(i => i.productId === product.id);
+      if (ex) return prev.map(i => i.productId === product.id ? { ...i, quantity: i.quantity + qty } : i);
+      return [...prev, { productId: product.id, name: product.name, price: product.price, quantity: qty, image: product.images?.[0] || '' }];
     });
   }
 

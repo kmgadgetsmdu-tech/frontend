@@ -103,7 +103,7 @@ body.light .t-text                 { color: #1e293b; }
 body.light .t-name                 { color: #0a0a0f; font-weight: 700; }
 
 /* --- Why Story section --- */
-body.light .why-story-sticky       { background: #f8fafc; }
+body.light .why-story-sticky       { background: linear-gradient(135deg, #0f0c29 0%, #302b63 55%, #24243e 100%); }
 /* Drop gradient-clip entirely in light mode — plain solid color is 100% reliable */
 body.light .why-story-headline     {
   background: none;
@@ -619,7 +619,7 @@ body.light .color-dot { border-color: rgba(0,0,0,0.2); }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--bg);
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 55%, #24243e 100%);
   isolation: isolate;
 }
 

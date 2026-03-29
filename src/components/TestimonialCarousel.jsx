@@ -47,20 +47,20 @@ export default function TestimonialCarousel({ reviews = [] }) {
               >
                 <div className="testimonial-card">
                   <div className="t-quote">"</div>
-                  <p className="t-text">{review.Text}</p>
+                  <p className="t-text">{review.text}</p>
                   <div style={{ marginBottom: '16px' }}>
                     <div className="t-stars" style={{ fontSize: '1.1rem', letterSpacing: '2px' }}>
-                      {getRatingStars(review.Rating)}
+                      {getRatingStars(review.rating)}
                     </div>
                   </div>
                   <div className="t-author">
                     <div className="t-avatar" style={{ background: 'linear-gradient(135deg,var(--accent),var(--accent2))' }}>
-                      {review.Name[0]}
+                      {review.name[0]}
                     </div>
                     <div>
-                      <div className="t-name">{review.Name}</div>
+                      <div className="t-name">{review.name}</div>
                       <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                        {new Date(review.CreatedAt).toLocaleDateString('en-IN', {
+                        {new Date(review.created_at).toLocaleDateString('en-IN', {
                           year: 'numeric',
                           month: 'short',
                           day: 'numeric'

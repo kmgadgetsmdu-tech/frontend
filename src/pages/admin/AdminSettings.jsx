@@ -19,8 +19,8 @@ export default function AdminSettings() {
     try {
       const res = await api.get('/settings');
       setSettings(res.data);
-      if (res.data.LogoData) {
-        setLogoPreview(res.data.LogoData);
+      if (res.data.logo_data) {
+        setLogoPreview(res.data.logo_data);
       }
     } catch (err) {
       console.error('Error fetching settings:', err);
@@ -28,11 +28,11 @@ export default function AdminSettings() {
   }
 
   function handleNameChange(e) {
-    setSettings({ ...settings, CompanyName: e.target.value });
+    setSettings({ ...settings, company_name: e.target.value });
   }
 
   function handleSubtitleChange(e) {
-    setSettings({ ...settings, CompanySubtitle: e.target.value });
+    setSettings({ ...settings, company_subtitle: e.target.value });
   }
 
   function handleLogoChange(e) {
@@ -42,7 +42,7 @@ export default function AdminSettings() {
     const reader = new FileReader();
     reader.onload = (event) => {
       const base64 = event.target.result;
-      setSettings({ ...settings, LogoData: base64 });
+      setSettings({ ...settings, logo_data: base64 });
       setLogoPreview(base64);
     };
     reader.readAsDataURL(file);
@@ -53,9 +53,9 @@ export default function AdminSettings() {
     setMessage('');
     try {
       const res = await api.post('/settings', {
-        CompanyName: settings.CompanyName,
-        CompanySubtitle: settings.CompanySubtitle,
-        LogoData: settings.LogoData
+        company_name: settings.company_name,
+        company_subtitle: settings.company_subtitle,
+        logo_data: settings.logo_data
       });
       
       if (res.data.success) {
@@ -102,7 +102,7 @@ export default function AdminSettings() {
           <h3>Company Name</h3>
           <input
             type="text"
-            value={settings.CompanyName}
+            value={settings.company_name}
             onChange={handleNameChange}
             className="form-input"
             placeholder="e.g., KM Gadgets"
@@ -113,7 +113,7 @@ export default function AdminSettings() {
           <h3>Tagline / Subtitle</h3>
           <input
             type="text"
-            value={settings.CompanySubtitle}
+            value={settings.company_subtitle}
             onChange={handleSubtitleChange}
             className="form-input"
             placeholder="e.g., Premium Gadgets for Everyone"

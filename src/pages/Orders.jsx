@@ -20,16 +20,16 @@ export default function Orders() {
   }, [filter]);
 
   async function openOrder(order) {
-    console.log('Opening order:', { id: order.Id, status: order.Status, userId: order.UserId });
+    console.log('Opening order:', { id: order.id, status: order.status, userId: order.user_id });
     setSelected(order);
     setInvoice(null);
     setShowReview(false);
     setHasReview(false);
-    if (order.Status === 'shipped' || order.Status === 'delivered') {
-      api.get(`/orders/${order.Id}/invoice`).then(r => setInvoice(r.data)).catch(() => {});
+    if (order.status === 'shipped' || order.status === 'delivered') {
+      api.get(`/orders/${order.id}/invoice`).then(r => setInvoice(r.data)).catch(() => {});
     }
-    if (order.Status === 'delivered') {
-      api.get(`/reviews/order/${order.Id}`).then(r => setHasReview(r.data.hasReview)).catch(() => {});
+    if (order.status === 'delivered') {
+      api.get(`/reviews/order/${order.id}`).then(r => setHasReview(r.data.hasReview)).catch(() => {});
     }
   }
 
@@ -76,13 +76,13 @@ export default function Orders() {
         ) : (
           <div id="orders-container">
             {shown.map(o => {
-              const sb = statusBadge(o.Status);
+              const sb = statusBadge(o.status);
               return (
-                <div key={o.Id} className="order-card">
+                <div key={o.id} className="order-card">
                   <div className="order-top">
                     <div>
-                      <div className="order-id">🧾 {o.Id}</div>
-                      <div className="order-date">{o.Date} &nbsp;·&nbsp; {o.Payment}</div>
+                      <div className="order-id">🧾 {o.id}</div>
+                      <div className="order-date">{o.created_at} &nbsp;·&nbsp; {o.payment}</div>
                     </div>
                     <span className={`badge ${sb.cls}`}>{sb.label}</span>
                   </div>

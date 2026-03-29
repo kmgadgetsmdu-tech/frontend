@@ -121,7 +121,7 @@ export default function Checkout() {
           try {
             // 3. Place order in our system
             const orderRes = await api.post('/orders', buildOrderPayload(total));
-            const kmgOrderId = orderRes.data?.Id || orderRes.data?.id;
+            const kmgOrderId = orderRes.data?.id || orderRes.data?.Id;
 
             // 4. Verify payment & link to order
             await api.post('/payments/verify', {

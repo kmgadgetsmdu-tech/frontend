@@ -23,23 +23,23 @@ export default function AdminBanners() {
 
   function openAdd() { setEditing(null); setForm(BLANK); setPreview(null); setModal(true); }
   function openEdit(b) {
-    setEditing(b.Id);
-    setForm({ Title:b.Title, Subtitle:b.Subtitle||'', Offer:b.Offer||'', Cta:b.Cta||'Shop Now', Link:b.Link||'/shop', Gradient:b.Gradient||BLANK.Gradient, Accent:b.Accent||'#0ea5e9', Icon:b.Icon||'⚡', Active:!!b.Active });
-    setPreview(b.ImageData || null);
+    setEditing(b.id);
+    setForm({ title:b.title, subtitle:b.subtitle||'', offer:b.offer||'', cta:b.cta||'Shop Now', link:b.link||'/shop', gradient:b.gradient||BLANK.gradient, accent:b.accent||'#0ea5e9', icon:b.icon||'⚡', active:!!b.active });
+    setPreview(b.image_data || null);
     setModal(true);
   }
 
   async function handleDelete(id) {
     if (!window.confirm('Delete this banner?')) return;
     await api.delete(`/banners/${id}`);
-    setBanners(bs => bs.filter(b => b.Id !== id));
+    setBanners(bs => bs.filter(b => b.id !== id));
   }
 
   async function handleImageUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
     const b64 = await compressImage(file, 1200, 500, 0.85);
-    up('ImageData', b64);
+    up('image_data', b64);
     setPreview(b64);
     e.target.value = '';
   }
@@ -50,7 +50,7 @@ export default function AdminBanners() {
     try {
       if (editing) {
         const r = await api.put(`/banners/${editing}`, form);
-        setBanners(bs => bs.map(b => b.Id === editing ? r.data : b));
+        setBanners(bs => bs.map(b => b.id === editing ? r.data : b));
       } else {
         const r = await api.post('/banners', form);
         setBanners(bs => [...bs, r.data]);
@@ -78,21 +78,21 @@ export default function AdminBanners() {
       ) : (
         <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
           {banners.map(b => (
-            <div key={b.Id} style={{ background:'var(--card)', borderRadius:12, padding:'16px 20px', display:'flex', alignItems:'center', gap:'16px', boxShadow:'0 2px 8px rgba(0,0,0,0.06)' }}>
-              <div style={{ width:80, height:56, borderRadius:8, background:b.Gradient||'var(--bg)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.6rem', flexShrink:0 }}>
-                {b.ImageData ? <img src={b.ImageData} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', borderRadius:8 }} /> : b.Icon}
+            <div key={b.id} style={{ background:'var(--card)', borderRadius:12, padding:'16px 20px', display:'flex', alignItems:'center', gap:'16px', boxShadow:'0 2px 8px rgba(0,0,0,0.06)' }}>
+              <div style={{ width:80, height:56, borderRadius:8, background:b.gradient||'var(--bg)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.6rem', flexShrink:0 }}>
+                {b.image_data ? <img src={b.image_data} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', borderRadius:8 }} /> : b.icon}
               </div>
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontWeight:700, marginBottom:2 }}>{b.Title || '(No title)'}</div>
-                <div style={{ fontSize:'0.8rem', color:'var(--text-dim)', marginBottom:4 }}>{b.Subtitle}</div>
+                <div style={{ fontWeight:700, marginBottom:2 }}>{b.title || '(No title)'}</div>
+                <div style={{ fontSize:'0.8rem', color:'var(--text-dim)', marginBottom:4 }}>{b.subtitle}</div>
                 <div style={{ display:'flex', gap:'8px', alignItems:'center', flexWrap:'wrap' }}>
-                  {b.Offer && <span style={{ fontSize:'0.72rem', background:'rgba(0,212,255,0.1)', color:'var(--accent)', border:'1px solid rgba(0,212,255,0.2)', borderRadius:20, padding:'2px 8px' }}>{b.Offer}</span>}
-                  <span style={{ fontSize:'0.72rem', background: b.Active ? 'rgba(16,185,129,0.1)' : 'rgba(100,116,139,0.1)', color: b.Active ? '#10b981' : '#64748b', border:`1px solid ${b.Active ? 'rgba(16,185,129,0.2)': 'rgba(100,116,139,0.2)'}`, borderRadius:20, padding:'2px 8px' }}>{b.Active ? 'Active' : 'Hidden'}</span>
+                  {b.offer && <span style={{ fontSize:'0.72rem', background:'rgba(0,212,255,0.1)', color:'var(--accent)', border:'1px solid rgba(0,212,255,0.2)', borderRadius:20, padding:'2px 8px' }}>{b.offer}</span>}
+                  <span style={{ fontSize:'0.72rem', background: b.active ? 'rgba(16,185,129,0.1)' : 'rgba(100,116,139,0.1)', color: b.active ? '#10b981' : '#64748b', border:`1px solid ${b.active ? 'rgba(16,185,129,0.2)': 'rgba(100,116,139,0.2)'}`, borderRadius:20, padding:'2px 8px' }}>{b.active ? 'Active' : 'Hidden'}</span>
                 </div>
               </div>
               <div style={{ display:'flex', gap:'6px', flexShrink:0 }}>
                 <button onClick={() => openEdit(b)} className="icon-btn">✏️</button>
-                <button onClick={() => handleDelete(b.Id)} className="icon-btn icon-btn-danger">🗑️</button>
+                <button onClick={() => handleDelete(b.id)} className="icon-btn icon-btn-danger">🗑️</button>
               </div>
             </div>
           ))}
